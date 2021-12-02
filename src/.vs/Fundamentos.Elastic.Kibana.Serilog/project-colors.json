@@ -1,0 +1,16 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "18f6d3a5-091f-4a10-b5bc-57e2239c80d6": {
+      "ProjectGuid": "18f6d3a5-091f-4a10-b5bc-57e2239c80d6",
+      "DisplayName": "docker-compose",
+      "ColorIndex": 0
+    },
+    "a2bbe496-ab58-4e89-a38c-353ac4308cd4": {
+      "ProjectGuid": "a2bbe496-ab58-4e89-a38c-353ac4308cd4",
+      "DisplayName": "Fundamentos.Elastic.Kibana.Serilog",
+      "ColorIndex": 1
+    }
+  },
+  "NextColorIndex": 2
+}

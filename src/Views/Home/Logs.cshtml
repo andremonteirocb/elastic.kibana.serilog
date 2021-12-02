@@ -1,0 +1,33 @@
+﻿@model Fundamentos.Elastic.Kibana.Serilog.Models.PublicacaoViewModel
+@{
+    ViewData["Title"] = "Logs Elasticsearch";
+}
+
+@using (Html.BeginForm("ObterLogs", "Home", FormMethod.Post))
+{
+    <input type="text" class="form-control" name="publicacaoId" value="@ViewBag.PublicacaoId" />
+    <button type="submit">Baixar logs</button>
+
+    if(Model != null)
+    {
+        <div style="height: 500px; overflow: auto;">
+            <h5>Total Sucesso: @Model.TotalSucesso</h5>
+            <ul>
+                @foreach (var publicacao in Model.PublicacoesSucesso)
+                {
+                    <li>@publicacao.PublicacaoId</li>
+                }
+            </ul>
+        </div>
+
+        <div style="height: 500px; overflow: auto;">
+            <h5>Total Falha: @Model.TotalFalha</h5>
+            <ul>
+                @foreach (var publicacao in Model.PublicacoesFalha)
+                {
+                    <li>@publicacao.PublicacaoId</li>
+                }
+            </ul>
+        </div>
+    }
+}
