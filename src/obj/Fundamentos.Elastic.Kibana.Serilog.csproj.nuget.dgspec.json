@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\andre.monteiro\\Dropbox\\My PC (PHIDELIS-09)\\Downloads\\Elastic.Kibana.Serilog\\src\\Fundamentos.Elastic.Kibana.Serilog.csproj": {}
+    "C:\\Users\\andre.monteiro\\Dropbox\\Programação\\ASP.Net\\Estudos\\Fundamentos.Elastic.Kibana.Serilog\\src\\Fundamentos.Elastic.Kibana.Serilog.csproj": {}
   },
   "projects": {
-    "C:\\Users\\andre.monteiro\\Dropbox\\My PC (PHIDELIS-09)\\Downloads\\Elastic.Kibana.Serilog\\src\\Fundamentos.Elastic.Kibana.Serilog.csproj": {
+    "C:\\Users\\andre.monteiro\\Dropbox\\Programação\\ASP.Net\\Estudos\\Fundamentos.Elastic.Kibana.Serilog\\src\\Fundamentos.Elastic.Kibana.Serilog.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\andre.monteiro\\Dropbox\\My PC (PHIDELIS-09)\\Downloads\\Elastic.Kibana.Serilog\\src\\Fundamentos.Elastic.Kibana.Serilog.csproj",
+        "projectUniqueName": "C:\\Users\\andre.monteiro\\Dropbox\\Programação\\ASP.Net\\Estudos\\Fundamentos.Elastic.Kibana.Serilog\\src\\Fundamentos.Elastic.Kibana.Serilog.csproj",
         "projectName": "Fundamentos.Elastic.Kibana.Serilog",
-        "projectPath": "C:\\Users\\andre.monteiro\\Dropbox\\My PC (PHIDELIS-09)\\Downloads\\Elastic.Kibana.Serilog\\src\\Fundamentos.Elastic.Kibana.Serilog.csproj",
+        "projectPath": "C:\\Users\\andre.monteiro\\Dropbox\\Programação\\ASP.Net\\Estudos\\Fundamentos.Elastic.Kibana.Serilog\\src\\Fundamentos.Elastic.Kibana.Serilog.csproj",
         "packagesPath": "C:\\Users\\andre.monteiro\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\andre.monteiro\\Dropbox\\My PC (PHIDELIS-09)\\Downloads\\Elastic.Kibana.Serilog\\src\\obj\\",
+        "outputPath": "C:\\Users\\andre.monteiro\\Dropbox\\Programação\\ASP.Net\\Estudos\\Fundamentos.Elastic.Kibana.Serilog\\src\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -44,6 +44,10 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "dependencies": {
+            "Elastic.Apm.NetCoreAll": {
+              "target": "Package",
+              "version": "[1.14.0, )"
+            },
             "Elasticsearch.Net": {
               "target": "Package",
               "version": "[7.15.2, )"
@@ -51,6 +55,20 @@
             "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation": {
               "target": "Package",
               "version": "[5.0.12, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[5.0.14, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[5.0.14, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[5.0.14, )"
             },
             "NEST": {
               "target": "Package",
@@ -87,6 +105,12 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.NETCore.App.Host.win-x64",
+              "version": "[5.0.12, 5.0.12]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"

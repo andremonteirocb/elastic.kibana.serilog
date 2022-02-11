@@ -1,25 +1,26 @@
-﻿using Fundamentos.Elastic.Kibana.Serilog.Models;
-using Elasticsearch.Net;
+﻿using Fundamentos.Elastic.Kibana.Serilog.Data;
+using Fundamentos.Elastic.Kibana.Serilog.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nest;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Fundamentos.Elastic.Kibana.Serilog.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ElasticContext _context;
         private readonly IElasticClient _elasticClient;
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<HomeController> _logger;       
         public HomeController(
             ILogger<HomeController> logger,
-            IElasticClient elasticClient)
+            IElasticClient elasticClient,
+            ElasticContext context)
         {
             _elasticClient = elasticClient;
+            _context = context;
             _logger = logger;
         }
 
@@ -71,6 +72,29 @@ namespace Fundamentos.Elastic.Kibana.Serilog.Controllers
         {
             ViewBag.PublicacaoId = publicacaoId;
             return View(new PublicacaoViewModel());
+        }
+
+        [HttpGet]
+        public IActionResult InserirSql()
+        {
+            _context.Publicacao.Add(new Publicacao(true, "teste"));
+            _context.SaveChanges();
+
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult ConsultarSql()
+        {
+            var publicacoes = _context.Publicacao.ToList();
+            return View(publicacoes);
+        }
+
+        [HttpGet]
+        public IActionResult Exception()
+        {
+            var number = Convert.ToInt32("d0d91d15-23a1-4d4a-855c-c699b2dddd00");
+            return View();
         }
 
         [HttpPost]

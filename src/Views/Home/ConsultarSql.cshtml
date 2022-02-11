@@ -1,0 +1,12 @@
+﻿@model List<Publicacao>
+@{
+    ViewData["Title"] = "Logs Elasticsearch";
+}
+
+<h3>Publicações</h3>
+<ul>
+    @foreach(var item in Model)
+    {
+        <li>@($"{item.PublicacaoId}: {item.Message}")</li>
+    }
+</ul>

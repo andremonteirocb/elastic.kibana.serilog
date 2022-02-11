@@ -1,40 +1,55 @@
 version: '3.4'
 
 services:
-  elasticsearch:
-   container_name: elasticsearch
-   image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1
-   ports:
-    - 9200:9200
-   volumes:
-    - elasticsearch-data:/usr/share/elasticsearch/data
-   environment:
-    - xpack.monitoring.enabled=true
-    - xpack.watcher.enabled=false
-    - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    - discovery.type=single-node
-    - ELASTICSEARCH_USERNAME=admin
-    - ELASTICSEARCH_PASSWORD=admin
-   networks:
-    - elastic
+   sqlserver:
+    image: 'mcr.microsoft.com/mssql/server:2019-latest'
+    container_name: sqlserver
+    restart: always
+    ports:
+        - '1433:1433'
+    volumes:
+      - db_sqlserver:/var/opt/mssql
+    environment:
+        - ACCEPT_EULA=Y
+        - SA_PASSWORD=Nin@0209
+    networks:
+      - elastic
 
-  kibana:
-   container_name: kibana
-   image: docker.elastic.co/kibana/kibana:7.15.1
-   ports:
-    - 5601:5601
-   depends_on:
-    - elasticsearch
-   environment:
-    - ELASTICSEARCH_URL=http://localhost:9200
-    - ELASTICSEARCH_USERNAME=admin
-    - ELASTICSEARCH_PASSWORD=admin
-   networks:
-    - elastic
-  
+   elasticsearch:
+     container_name: elasticsearch
+     image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1
+     ports:
+      - 9200:9200
+     volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+     environment:
+      - xpack.monitoring.enabled=true
+      - xpack.watcher.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.type=single-node
+      - ELASTICSEARCH_USERNAME=admin
+      - ELASTICSEARCH_PASSWORD=admin
+     networks:
+      - elastic
+
+   kibana:
+     container_name: kibana
+     image: docker.elastic.co/kibana/kibana:7.15.1
+     ports:
+      - 5601:5601
+     depends_on:
+      - elasticsearch
+     environment:
+      - ELASTICSEARCH_URL=http://localhost:9200
+      - ELASTICSEARCH_USERNAME=admin
+      - ELASTICSEARCH_PASSWORD=admin
+     networks:
+      - elastic
+
 networks:
   elastic:
     driver: bridge
 
 volumes:
   elasticsearch-data:
+  db_sqlserver:

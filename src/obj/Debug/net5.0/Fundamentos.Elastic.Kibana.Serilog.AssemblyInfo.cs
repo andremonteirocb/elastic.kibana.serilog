@@ -11,6 +11,7 @@
 using System;
 using System.Reflection;
 
+[assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("8e5baafe-f0e3-4cf2-b194-0f70aab82567")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("Fundamentos.Elastic.Kibana.Serilog")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]

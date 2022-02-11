@@ -1,9 +1,12 @@
+using Elastic.Apm.NetCoreAll;
 using Fundamentos.Elastic.Kibana.Serilog.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Fundamentos.Elastic.Kibana.Serilog.Data;
 
 namespace Fundamentos.Elastic.Kibana.Serilog
 {
@@ -16,9 +19,11 @@ namespace Fundamentos.Elastic.Kibana.Serilog
                 .SetBasePath(hostEnvironment.ContentRootPath)
                 .AddJsonFile("appsettings.json", true, true)
                 .AddJsonFile($"appsettings.{hostEnvironment.EnvironmentName}.json", true, true)
+                .AddUserSecrets<Program>()
                 .AddEnvironmentVariables();
 
             _hostEnvironment = hostEnvironment;
+
             Configuration = builder.Build();
         }
         public IConfiguration Configuration { get; }
@@ -30,6 +35,10 @@ namespace Fundamentos.Elastic.Kibana.Serilog
             if (_hostEnvironment.IsDevelopment())
                 mvcBuilder.AddRazorRuntimeCompilation();
 
+            services.AddDbContext<ElasticContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            //services.AddScoped<ElasticContext>();
             services.AddElasticsearch(Configuration);
         }
 
@@ -48,6 +57,8 @@ namespace Fundamentos.Elastic.Kibana.Serilog
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthorization();
+            app.UseAllElasticApm(Configuration);
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

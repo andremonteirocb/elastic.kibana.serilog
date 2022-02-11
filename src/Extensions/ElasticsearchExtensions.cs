@@ -12,7 +12,6 @@ namespace Fundamentos.Elastic.Kibana.Serilog.Extensions
             var settings = new ConnectionSettings(new Uri(configuration["ElasticsearchSettings:uri"]));
 
             var defaultIndex = configuration["ElasticsearchSettings:defaultIndex"];
-
             if (!string.IsNullOrEmpty(defaultIndex))
                 settings = settings.DefaultIndex(defaultIndex);
 
