@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nest;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -38,7 +39,7 @@ namespace Fundamentos.Elastic.Kibana.Serilog.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Inserir(int quantidade = 500, Guid? publicacaoId = null)
+        public async Task<IActionResult> Inserir(int quantidade = 1, Guid? publicacaoId = null)
         {
             //var query = new QueryContainerDescriptor<Publicacao>().MatchAll();
             //var response = await _elasticClient.DeleteByQueryAsync<Publicacao>(q => q
@@ -49,14 +50,41 @@ namespace Fundamentos.Elastic.Kibana.Serilog.Controllers
             //if (!response.IsValid)
             //    throw new Exception(response.ServerError?.ToString(), response.OriginalException);
 
-            publicacaoId = publicacaoId == null ? Guid.NewGuid() : publicacaoId;
-            for (var i = 0; i <= quantidade; i++)
+            //var publicacoes = new List<Publicacao>();
+            //publicacaoId = publicacaoId == null ? Guid.NewGuid() : publicacaoId;
+            //for (var i = 0; i <= quantidade; i++)
+            //{
+            //    var success = i % 2 == 0 ? true : false;
+            //    var message = success ? "Parabéns e-mail enviado com sucesso" : "Falha ao enviar o e-mail";
+            //    var publicacao = new Publicacao(success, message, publicacaoId);
+
+            //    publicacoes.Add(publicacao);
+            //}
+
+            //await _elasticClient.IndexManyAsync(publicacoes);
+
+            var movies = new List<Movies>();
+            for (var i = 0; i < quantidade; i++)
             {
-                var success = i % 2 == 0 ? true : false;
-                var message = success ? "Parabéns e-mail enviado com sucesso" : "Falha ao enviar o e-mail";
-                var publicacao = new Publicacao(success, message, publicacaoId);
-                await _elasticClient.IndexDocumentAsync(publicacao, new System.Threading.CancellationToken());
+                var movie = new Movies(Guid.NewGuid().ToString(), new Random().Next(2022, 2022), $"Filme {i}");
+                movies.Add(movie);
             }
+
+            var resultInsert = await _elasticClient.IndexManyAsync(movies);
+            if (!resultInsert.IsValid) throw new Exception(resultInsert.ServerError?.ToString(), resultInsert.OriginalException);
+
+            var movieUpdated = movies[0];
+            movieUpdated.title = "Filme Updated";
+            var resultUpdate = await _elasticClient.UpdateAsync(DocumentPath<Movies>.Id(movieUpdated.Id).Index("movies"), x=> x.Doc(movieUpdated));
+            if (!resultUpdate.IsValid) throw new Exception(resultUpdate.ServerError?.ToString(), resultUpdate.OriginalException);
+
+            movieUpdated.title = "Filme Updated Partial";
+            var request = new UpdateRequest<Movies, object>("movies", movieUpdated.Id)
+            {
+                Doc = movieUpdated
+            };
+            var resultUpdatePartial = await _elasticClient.UpdateAsync(request);
+            if (!resultUpdatePartial.IsValid) throw new Exception(resultUpdatePartial.ServerError?.ToString(), resultUpdatePartial.OriginalException);
 
             //var search = new SearchDescriptor<Publicacao>("publicacao").MatchAll();
             //var result = await _elasticClient.SearchAsync<Publicacao>(search);
