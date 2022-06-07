@@ -1,9 +1,12 @@
+networks:
+  elastic:
+    driver: bridge
 services:
   elasticsearch:
     container_name: elasticsearch
     environment:
-      ELASTICSEARCH_PASSWORD: MagicWord
-      ELASTICSEARCH_USERNAME: elastic
+      ELASTICSEARCH_PASSWORD: admin
+      ELASTICSEARCH_USERNAME: admin
       ES_JAVA_OPTS: -Xms512m -Xmx512m
       discovery.type: single-node
       xpack.monitoring.enabled: "true"
@@ -12,36 +15,40 @@ services:
     networks:
       elastic: null
     ports:
-    - mode: ingress
+    - published: 9200
       target: 9200
-      published: 9200
-      protocol: tcp
     volumes:
-    - type: volume
-      source: elasticsearch-data
-      target: /usr/share/elasticsearch/data
-      volume: {}
+    - elasticsearch-data:/usr/share/elasticsearch/data:rw
   kibana:
     container_name: kibana
     depends_on:
       elasticsearch:
         condition: service_started
     environment:
-      ELASTICSEARCH_PASSWORD: MagicWord
+      ELASTICSEARCH_PASSWORD: admin
       ELASTICSEARCH_URL: http://localhost:9200
-      ELASTICSEARCH_USERNAME: elastic
+      ELASTICSEARCH_USERNAME: admin
     image: docker.elastic.co/kibana/kibana:7.15.1
     networks:
       elastic: null
     ports:
-    - mode: ingress
+    - published: 5601
       target: 5601
-      published: 5601
-      protocol: tcp
-networks:
-  elastic:
-    name: dockercompose2535557928943295870_elastic
-    driver: bridge
+  sqlserver:
+    container_name: sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: Nin@0209
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    networks:
+      elastic: null
+    ports:
+    - published: 1433
+      target: 1433
+    restart: always
+    volumes:
+    - db_sqlserver:/var/opt/mssql:rw
+version: '3.4'
 volumes:
-  elasticsearch-data:
-    name: dockercompose2535557928943295870_elasticsearch-data
+  db_sqlserver: {}
+  elasticsearch-data: {}

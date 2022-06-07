@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
+using Fundamentos.Elastic.Kibana.Serilog.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nest;
@@ -22,7 +25,27 @@ namespace Fundamentos.Elastic.Kibana.Serilog.Extensions
                 settings = settings.BasicAuthentication(basicAuthUser, basicAuthPassword);
 
             var client = new ElasticClient(settings);
+            AddElasticIndices(client);
             services.AddSingleton<IElasticClient>(client);
+        }
+
+        public static void AddElasticIndices(IElasticClient client)
+        {
+            var types = Assembly
+                .GetAssembly(typeof(ElasticBase))
+                .GetTypes()
+                .Where(t => t.IsSealed && t.IsAssignableTo(typeof(ElasticBase)))
+                .ToList();
+
+            foreach(var type in types)  
+            {
+                var inst = (ElasticBase)Activator.CreateInstance(type);
+                if (string.IsNullOrEmpty(inst.Name) || type.GetMethod("Mapping") == null) continue;
+
+                var indexName = inst.Name.ToLower();
+                if (!client.Indices.Exists(indexName).Exists)
+                    client.Indices.Create(indexName, c => inst.Mapping(c));
+            }
         }
     }
 }
